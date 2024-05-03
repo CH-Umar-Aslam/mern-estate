@@ -5,9 +5,11 @@ import { About } from './paegs/About'
 import SignIn from './paegs/SignIn'
 import SignUp from './paegs/SignUp'
 import Profile from './paegs/Profile'
+import Header from './components/Header'
 const App = () => {
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
 
         < Route path='/' element={<Home />} />
