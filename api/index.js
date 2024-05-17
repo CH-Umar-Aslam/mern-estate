@@ -21,4 +21,12 @@ app.listen(3000, () => {
 
 app.use("/api/user", authRouter)
 
-
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500
+  const errorMessage = err.message || "invalid server error"
+  res.status(statusCode).json({
+    success: false,
+    message: errorMessage,
+    status: statusCode
+  })
+})
