@@ -9,7 +9,7 @@ export default function Header() {
                <span className='text-slate-500'>Umar</span>
                <span className='text-slate-700' >Estate</span>
             </h1>
-            <form className='bg-slate-100  p-3  flex  items-center'>
+            <form className='bg-slate-100 rounded-lg p-3  flex  items-center'>
                <input type="text" name=""
                   className='bg-transparent  w-24 sm:w-64 focus:outline-none '
                   placeholder='Search...' />
