@@ -33,7 +33,7 @@ export default function SignUp() {
     const data = await res.json();
     if (data.success === false) {
       setError(data.message);
-
+      setLoading(false);
       return;
     }
     setLoading(false);
@@ -47,7 +47,7 @@ export default function SignUp() {
           <input onChange={handleChange} type="text" placeholder='username' id='username' className='p-3  border rounded-lg ' />
           <input onChange={handleChange} type="email" placeholder='email' id='email' className='p-3  border rounded-lg ' />
           <input onChange={handleChange} type="password" placeholder='password' id='password' className='p-3  border rounded-lg ' />
-          <button className='p-3 text-white bg-slate-700 uppercase hover:opacity-95 rounded-lg disabled:opacity-80'>{loading ? "Loading..." : "Sign up"}</button>
+          <button disabled={loading} className='p-3 text-white bg-slate-700 uppercase hover:opacity-95 rounded-lg disabled:opacity-80'>{loading ? "Loading..." : "Sign up"}</button>
 
         </form>
         <div className='mt-3'>
