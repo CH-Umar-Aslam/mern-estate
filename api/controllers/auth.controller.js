@@ -15,7 +15,7 @@ const signUp = async (req, res, next) => {
     await newUser.save();
     res.status(200).json("account created successfully")
   } catch (error) {
-    next(errorHandler(550, "error by function"))
+    next(error);
   }
 
 }
