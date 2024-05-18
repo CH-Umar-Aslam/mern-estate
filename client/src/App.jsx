@@ -1,10 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './paegs/Home'
-import { About } from './paegs/About'
-import SignIn from './paegs/SignIn'
-import SignUp from './paegs/SignUp'
-import Profile from './paegs/Profile'
+import Home from './pages/Home'
+import { About } from './pages/About'
+import SignIn from './pages/SignIn'
+import SignUp from './pages/SignUp'
+import Profile from './pages/Profile'
 import Header from './components/Header'
 const App = () => {
   return (
