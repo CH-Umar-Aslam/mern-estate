@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import { signInFailure, signInLoading, signInSuccess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from "react-redux"
+import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const { error, loading } = useSelector((state) => state.user)
@@ -53,6 +54,7 @@ export default function SignIn() {
           <input onChange={handleChange} type="email" placeholder='email' id='email' className='p-3  border rounded-lg ' />
           <input onChange={handleChange} type="password" placeholder='password' id='password' className='p-3  border rounded-lg ' />
           <button disabled={loading} className='p-3 text-white bg-slate-700 uppercase hover:opacity-95 rounded-lg disabled:opacity-80'>{loading ? "Loading..." : "Sign in"}</button>
+          <OAuth />
 
         </form>
         <div className='mt-3'>

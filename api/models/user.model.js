@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
 
+  },
+  avatar: {
+    type: String,
+    default: "https://tse4.mm.bing.net/th?id=OIP.tgmmCh4SA36j0dMT0ay9_AHaHa&pid=Api&P=0&h=220"
   }
 
 
