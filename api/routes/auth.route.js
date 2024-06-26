@@ -7,4 +7,5 @@ authRouter.post("/sign-up", signUp)
 authRouter.post("/sign-in", signIn)
 authRouter.post("/google", google)
 
+
 export default authRouter
