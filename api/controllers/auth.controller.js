@@ -33,48 +33,37 @@ export const signIn = async (req, res, next) => {
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
       .json(validUser)
+
   } catch (error) {
     next(error);
   }
 }
 
-
 export const google = async (req, res, next) => {
   try {
-    const isUser = await User.findOne({ email: req.body.email })
+    const isUser = await User.findOne({ email: req.body.email });
     if (isUser) {
-
       const token = jwt.sign({ id: isUser._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = isUser._doc;
       console.log(token);
-      res.cookie({
-        "access_token": token,
-        httpOnly: true,
-      })
-        .json(rest)
+      res.cookie("access_token", token, { httpOnly: true }).json(rest);
     } else {
-      const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
+      const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
       const hashedPassword = bcrypt.hashSync(password, 10);
       const newUser = new User({
         username: req.body.username.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4),
         email: req.body.email,
         password: hashedPassword,
-        avatar: req.body.photo
-      })
+        avatar: req.body.photo,
+      });
 
       const { password: pass, ...rest } = newUser._doc;
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
 
-      res.cookie({
-        "access_token": token,
-        httpOnly: true,
-      }).json(rest).status(200);
+      res.cookie("access_token", token, { httpOnly: true }).json(rest).status(200);
     }
-
-
+  } catch (error) {
+    next(error);
   }
-  catch (error) {
-    next(error)
-  }
-}
+};

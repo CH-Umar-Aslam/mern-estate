@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 import { app } from '../firebase';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useDispatch } from 'react-redux';
-import { updateUserStart, updateUserFailure, updateUserSuccess } from "../redux/user/userSlice";
-import axios from "axios"
+import { updateUserStart, updateUserFailure, updateUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess, deleteUserFailure, deleteUserSuccess, deleteUserStart } from "../redux/user/userSlice";
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const fileRef = useRef();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({});
@@ -52,40 +53,84 @@ export default function Profile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("1");
-    dispatch(updateUserStart())
-    fetch(`/api/user/update/${currentUser._id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        formData
+    if (formData.password == "") {
+      alert("please enter your email ")
+      return;
+    }
+
+    try {
+
+      dispatch(updateUserStart())
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          formData
+        })
       })
-    })
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message))
+        return;
+      }
+      dispatch(updateUserSuccess(data))
+    }
+    catch (error) {
+      dispatch(updateUserFailure(error.message))
+      console.log(error);
+    }
+  }
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart())
+      const res = await fetch(`/api/user/sign-out/${currentUser._id}`)
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message))
+      }
+      dispatch(signOutUserSuccess(data))
+      navigate("/sign-in")
+    } catch (error) {
+      dispatch(signOutUserFailure(data.message))
 
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        console.log("2");
-        dispatch(updateUserSuccess(data))
-        setUpdateSuccess(true)
+    }
+  }
+
+  const deleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart())
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
-      .catch(error => {
-        dispatch(updateUserFailure(error.message))
-        console.error('Error:', error);
-      });
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message))
+      }
 
+      dispatch(deleteUserSuccess(data));
 
-  };
+    } catch (error) {
+      dispatch(deleteUserFailure(data.message))
+    }
+
+  }
 
 
   return (
     <div className='max-w-lg flex flex-col mx-auto my-7'>
       <h1 className='text-3xl my-5 font-semibold text-center'>Profile</h1>
-      <form  >
+      <form
+        onSubmit={handleSubmit}
+      >
         <input type="file" hidden onChange={(e) => setFile(e.target.files[0])} ref={fileRef} accept='image/.*'
         />
+
+
         <img
           onClick={() => fileRef.current.click()}
           className='w-24 mt-2 mb-5 mx-auto  h-24 object-cover rounded-full'
@@ -93,6 +138,7 @@ export default function Profile() {
 
           alt="Profile Avatar"
         />
+
         <p className='text-center font-medium my-4'>
           {fileUploadError ? <span className='text-red-700 '>Image upload failed!</span> :
             filePerc > 0 && filePerc < 100 ? <span className='text-slate-700 '>Uploading {filePerc}%</span>
@@ -108,37 +154,53 @@ export default function Profile() {
             defaultValue={currentUser.username}
             onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })}
           />
+
           <input className='p-3 bg-transparent focus:outline-none rounded-lg border' type="email"
             id="email"
             placeholder='email'
             defaultValue={currentUser.email}
-            onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })}
+            onChange={(e) => {
+              if (e.target.value === "" || e.target.value === " ") {
+                return
+              } else {
+                return setFormData({ ...formData, [e.target.id]: e.target.value })
+              }
+            }}
           />
           <input type="password"
             id='password'
             placeholder='password'
             className='p-3 rounded-lg focus:outline-none bg-transparent border'
-            onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })}
+            onChange={(e) => {
+              if (e.target.value === "" || e.target.value === " ") {
+                return
+              } else {
+                return setFormData({ ...formData, [e.target.id]: e.target.value })
+              }
+            }}
 
           />
 
-          <button
-            onClick={handleSubmit}
 
-            className='p-3 w-full
-            text-white bg-green-600 uppercase hover:opacity-95 rounded-lg disabled:opacity-80'>
+          <button
+
+
+            className='p-3 w-full text-white bg-green-600 uppercase hover:opacity-95 rounded-lg disabled: opacity-80'>
 
             Update
           </button>
 
-          <div className='flex justify-between text-red-600'>
-            <p>Delete Account</p>
-            <p>Sign out</p>
-          </div>
-
-          <p className='text-center text-green-600'>Show listings</p>
         </div>
-      </form>
+
+      </form >
+
+
+      <div className='flex justify-between text-red-600'>
+        <p onClick={deleteAccount}>Delete Account</p>
+        <p onClick={handleSignOut} >Sign out</p>
+      </div>
+
+      <p className='text-center text-green-600'>Show listings</p>
 
 
       <p className='text-center text-red-600'> {error ? error : ""}  </p>
