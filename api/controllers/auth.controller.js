@@ -45,7 +45,7 @@ export const google = async (req, res, next) => {
     if (isUser) {
       const token = jwt.sign({ id: isUser._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = isUser._doc;
-      console.log(token);
+
       res.cookie("access_token", token, { httpOnly: true }).json(rest);
     } else {
       const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);

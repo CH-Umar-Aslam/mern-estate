@@ -5,6 +5,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import { useDispatch } from 'react-redux';
 import { updateUserStart, updateUserFailure, updateUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess, deleteUserFailure, deleteUserSuccess, deleteUserStart } from "../redux/user/userSlice";
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 export default function Profile() {
   const fileRef = useRef();
@@ -152,7 +153,7 @@ export default function Profile() {
 
         </p>
 
-        <div className='grid space-y-5 max-w-xl'>
+        <div className='grid space-y-3 max-w-xl'>
           <input type="text"
             id="username"
             placeholder='username'
@@ -189,12 +190,17 @@ export default function Profile() {
 
 
           <button
-            disabled={filePerc < 100 || loading}
+            disabled={loading}
 
-            className='p-3 w-full text-white bg-green-600 uppercase hover:opacity-95 rounded-lg disabled: opacity-80'>
+            className='p-3 w-full text-white bg-gray-700 disabled:opacity-60 uppercase hover:opacity-80 transition tranform ease-in rounded-lg '>
 
             {loading ? "Loading..." : "  Update"}
           </button>
+          <Link
+            to={"/create-listing"}
+            className='p-3 w-full mb-5  transition tranform ease-in text-white bg-green-600 uppercase hover:opacity-80 rounded-lg text-center '>
+            Create Listing
+          </Link>
 
         </div>
 
@@ -210,7 +216,7 @@ export default function Profile() {
 
 
       <p className='text-center text-red-600'> {error ? error : ""}  </p>
-      <p className='text-center text-green-600'> {updateSuccess ? "Profile updated successfully" : ""}  </p>
+      <p className='pt-4 text-green-600'> {updateSuccess ? "Profile updated successfully" : ""}  </p>
 
 
 

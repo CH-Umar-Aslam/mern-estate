@@ -7,7 +7,7 @@ export const UpdateUser = async (req, res, next) => {
   if (req.params.id !== req.user.id) return next(errorHandler(401, "Unauthenticated"));
   try {
 
-    // console.log(req.body.formData.password.size(), req.body.formData.email.length(), req.body.formData.email.length())
+
     if (req.body.formData.password) {
       req.body.formData.password = bcrypt.hashSync(req.body.formData.password, 10);
     }
@@ -36,7 +36,7 @@ export const UpdateUser = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   if (req.params.id !== req.user.id) return next(errorHandler(402, "You can only delete your own account"));
   try {
-    console.log("del user out")
+
     const findUser = await User.findByIdAndDelete(req.params.id);
     if (!findUser) {
       return next(errorHandler(404, "User not found"));
@@ -50,7 +50,7 @@ export const deleteUser = async (req, res, next) => {
 }
 export const signOut = (req, res, next) => {
   try {
-    console.log("sign out")
+
     res.clearCookie("access_token");
     res.status(200).json({ message: "user signed out successfully" });
   } catch (error) {
