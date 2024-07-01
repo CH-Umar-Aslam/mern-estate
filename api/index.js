@@ -5,6 +5,7 @@ import authRouter from './routes/auth.route.js';
 import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.route.js';
 import cors from 'cors';
+import listingRouter from './routes/listing.route.js';
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +36,7 @@ mongoose.connect(process.env.MONGO, {
 // Define routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/listing', listingRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
