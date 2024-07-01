@@ -41,8 +41,7 @@ export default function Profile() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          // Assuming setFormData is defined somewhere to update the form data
+          // console.log('File available at', downloadURL);
 
           setFormData({ ...formData, avatar: downloadURL });
 
@@ -52,6 +51,7 @@ export default function Profile() {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
     if (formData.password == "") {
       alert("please enter your email ")
@@ -70,14 +70,20 @@ export default function Profile() {
           formData
         })
       })
+      setFormData({})
       const data = await res.json();
       if (data.success === false) {
+        setUpdateSuccess(false);
         dispatch(updateUserFailure(data.message))
         return;
       }
       dispatch(updateUserSuccess(data))
+      setUpdateSuccess(true);
+      // window.location.reload()
     }
     catch (error) {
+      setUpdateSuccess(false);
+
       dispatch(updateUserFailure(error.message))
       console.log(error);
     }
@@ -172,22 +178,22 @@ export default function Profile() {
             placeholder='password'
             className='p-3 rounded-lg focus:outline-none bg-transparent border'
             onChange={(e) => {
-              if (e.target.value === "" || e.target.value === " ") {
-                return
-              } else {
-                return setFormData({ ...formData, [e.target.id]: e.target.value })
+              const trimmedValue = e.target.value.trim(); // Trim leading and trailing spaces
+              if (!trimmedValue) {
+                return; // Do nothing if only spaces are entered
               }
+              setFormData({ ...formData, [e.target.id]: trimmedValue });
             }}
 
           />
 
 
           <button
-
+            disabled={filePerc < 100 || loading}
 
             className='p-3 w-full text-white bg-green-600 uppercase hover:opacity-95 rounded-lg disabled: opacity-80'>
 
-            Update
+            {loading ? "Loading..." : "  Update"}
           </button>
 
         </div>

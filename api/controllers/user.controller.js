@@ -6,7 +6,8 @@ export const UpdateUser = async (req, res, next) => {
 
   if (req.params.id !== req.user.id) return next(errorHandler(401, "Unauthenticated"));
   try {
-    console.log(req.body.formData.password.length)
+
+    // console.log(req.body.formData.password.size(), req.body.formData.email.length(), req.body.formData.email.length())
     if (req.body.formData.password) {
       req.body.formData.password = bcrypt.hashSync(req.body.formData.password, 10);
     }
